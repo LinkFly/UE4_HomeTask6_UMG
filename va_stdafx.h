@@ -1,0 +1,3 @@
+﻿#define COREUOBJECT_API
+#define ENGINE_API
+#define UE4_HOMETASK5_UMG_API

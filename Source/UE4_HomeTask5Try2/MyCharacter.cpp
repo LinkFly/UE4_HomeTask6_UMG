@@ -2,6 +2,7 @@
 
 #include "MyCharacter.h"
 #include "Components/SceneComponent.h"
+#include "UE4_HomeTask6_UMG_GameModeBase.h"
 #include "GameFramework/Pawn.h"
 //#include <InputComponent.h>
 
@@ -57,6 +58,7 @@ AMyCharacter::AMyCharacter()
 	if (MyCharacterBPAnim.Object) {
 		SkMesh->SetAnimInstanceClass(MyCharacterBPAnim.Object->GetAnimBlueprintGeneratedClass());
 	}
+	BulletsInventory.Init(TBulletTypes::EBulletLight, 1);
 }
 	
 
@@ -65,6 +67,16 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	Cast<USceneComponent>(Weapon)->SetVisibility(bWeaponVisible);
+	auto CurGameMode = Cast<AUE4_HomeTask6_UMG_GameModeBase>(GetWorld()->GetAuthGameMode());
+	if (CurGameMode) {
+		CurGameMode->EvtPickup.BindUObject(this, &AMyCharacter::OnPickup);
+	}
+}
+
+void AMyCharacter::OnPickup(TBulletTypes AmmoType) {
+	GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Green, TEXT("Pickup ammo"));
+	BulletsInventory.Add(AmmoType);
+	CurAmmo = AmmoType;
 }
 
 // Called every frame
@@ -121,6 +133,7 @@ void AMyCharacter::Lookup(float AxisValue) {
 }
 
 void AMyCharacter::ShootBullet() {
+	if (CurAmmo == TBulletTypes::EBulletNone) return;
 	UWorld* World = GetWorld();
 	if (isFire && ProjectileClass && World) {
 		const FRotator SpawnRotation = GetControlRotation();
@@ -164,8 +177,10 @@ void AMyCharacter::SwitchWeapon() {
 }
 
 void AMyCharacter::SwitchAmmo() {
-	static TBulletTypes BulletTypes[] = { EBulletLight, EBulletStandard, EBulletHard };
-	SwitchAmmoCurIdx = (++SwitchAmmoCurIdx) % 3;
-	CurAmmo = BulletTypes[SwitchAmmoCurIdx];
-	return;
+	int idx = BulletsInventory.Find(CurAmmo);
+m1:
+	idx = (idx + 1) % BulletsInventory.Num();
+	CurAmmo = BulletsInventory[idx];
+	if (CurAmmo == TBulletTypes::EBulletNone) goto m1;
+	return; 
 }

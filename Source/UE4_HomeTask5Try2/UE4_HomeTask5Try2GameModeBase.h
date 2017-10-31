@@ -9,12 +9,11 @@
 /**
  * 
  */
+
 UCLASS()
 class UE4_HOMETASK5TRY2_API AUE4_HomeTask5Try2GameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
+
 	
 };

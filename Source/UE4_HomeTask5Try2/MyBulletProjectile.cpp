@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MyBulletProjectile.h"
+//#include "UE4_HomeTask6_UMG_GameModeBase.h"
 #include "Runtime/Engine/Classes/Materials/Material.h"
 
 void AMyBulletProjectile::SetMatField(UMaterial** PMat, const TCHAR* MatRef) {
@@ -39,7 +40,7 @@ AMyBulletProjectile::AMyBulletProjectile()
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
-	SetBulletType(EBulletStandard);
+	SetBulletType(TBulletTypes::EBulletLight);
 	InitialLifeSpan = 3;
 }
 
@@ -53,11 +54,11 @@ void AMyBulletProjectile::SetMeshScale(float Scale) {
 
 void AMyBulletProjectile::SetBulletType(TBulletTypes bulletType) {
 	switch (bulletType) {
-	case EBulletLight:
-		SetMatAndSpeed(MLight, 250); break;
-	case EBulletStandard:
+	case TBulletTypes::EBulletLight:
+		SetMatAndSpeed(MLight, 300); break;
+	case TBulletTypes::EBulletStandard:
 		SetMatAndSpeed(MStandard, 500); break;
-	case EBulletHard:
+	case TBulletTypes::EBulletHard:
 		SetMatAndSpeed(MHard, 10000); break;
 	}
 	return;
@@ -66,6 +67,7 @@ void AMyBulletProjectile::SetBulletType(TBulletTypes bulletType) {
 void AMyBulletProjectile::SetMatAndSpeed(UMaterial* &Mat, float Speed) {
 	ProjectileMovement->InitialSpeed = Speed;
 	ProjectileMovement->MaxSpeed = Speed * 1.5;
+	CurMaterial = Mat;
 	BulletMeshCmp->SetMaterial(0, Mat);
 }
 

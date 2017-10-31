@@ -12,6 +12,7 @@
 #include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
 #include "MyBulletProjectile.h"
 #include "Runtime/Engine/Classes/Animation/AnimBlueprint.h"
+#include "GameStructs.h"
 #include "MyCharacter.generated.h"
 
 
@@ -49,7 +50,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon") FVector GunOffset;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon") float BulletScale = .15f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon") float BulletGravity = .025f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon") int32 CurAmmo = EBulletStandard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon") TBulletTypes CurAmmo = TBulletTypes::EBulletLight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+		TArray<TBulletTypes> BulletsInventory;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -57,11 +60,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION() void OnPickup(TBulletTypes AmmoType);
+
 private:
 	FVector Velocity;
 	const FName GunAmmoSocket = FName(TEXT("AmmoSocket"));
 	const FName ForGunSocket = FName(TEXT("thumb_01_r"));
-	int32 SwitchAmmoCurIdx = 1;
+	/*int32 SwitchAmmoCurIdx = 1;*/
 
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);

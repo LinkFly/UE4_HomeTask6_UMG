@@ -7,12 +7,13 @@
 #include "Components/SphereComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/ProjectileMovementComponent.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "GameStructs.h"
 #include "MyBulletProjectile.generated.h"
 
-UENUM()
-enum TBulletTypes {
-	EBulletLight, EBulletStandard, EBulletHard
-};
+//UENUM()
+//enum TBulletTypes {
+//	EBulletLight, EBulletStandard, EBulletHard
+//};
 
 //typedef _TBulletTypes TBulletTypes;
 
@@ -35,17 +36,17 @@ public:
 		UStaticMeshComponent* BulletMeshCmp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float MeshScale = 0.01;
+	
+	UMaterial* CurMaterial;
+	UMaterial* MLight;
+	UMaterial* MStandard;
+	UMaterial* MHard;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	void SetMatField(UMaterial** PMat, const TCHAR* MatRef);
 	void SetMatAndSpeed(UMaterial* &Mat, float Speed);
-
-	UMaterial* MLight;
-	UMaterial* MStandard;
-	UMaterial* MHard;
-
 
 
 public:	

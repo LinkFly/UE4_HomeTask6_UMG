@@ -68,6 +68,8 @@ private:
 	const FName ForGunSocket = FName(TEXT("thumb_01_r"));
 	/*int32 SwitchAmmoCurIdx = 1;*/
 
+	void ShowControlInfo();
+
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 	void Turn(float AxisValue);
@@ -77,4 +79,5 @@ private:
 	void EndFire();
 	void SwitchWeapon();
 	void SwitchAmmo();
+	void SwitchInventory();
 };

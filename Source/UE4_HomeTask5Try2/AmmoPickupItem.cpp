@@ -42,7 +42,8 @@ void AAmmoPickupItem::NotifyActorBeginOverlap(AActor* OtherActor) {
 	auto CurGameMode = Cast<AUE4_HomeTask6_UMG_GameModeBase>(GetWorld()->GetAuthGameMode());
 	if (CurGameMode) {
 		/*SetActorHiddenInGame(true);*/
-		CurGameMode->EvtPickup.ExecuteIfBound(CurAmmo);
+		/*CurGameMode->EvtPickup.ExecuteIfBound(CurAmmo);*/
+		CurGameMode->EvtPickup.Broadcast(CurAmmo);
 		Destroy();
 	}
 }

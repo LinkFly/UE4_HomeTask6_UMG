@@ -66,10 +66,11 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	ShowControlInfo();
 	Cast<USceneComponent>(Weapon)->SetVisibility(bWeaponVisible);
 	auto CurGameMode = Cast<AUE4_HomeTask6_UMG_GameModeBase>(GetWorld()->GetAuthGameMode());
 	if (CurGameMode) {
-		CurGameMode->EvtPickup.BindUObject(this, &AMyCharacter::OnPickup);
+		CurGameMode->EvtPickup.AddUObject(this, &AMyCharacter::OnPickup);
 	}
 }
 
@@ -101,6 +102,14 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Released, this, &AMyCharacter::EndFire);
 	PlayerInputComponent->BindAction(TEXT("SwitchWeapon"), IE_Pressed, this, &AMyCharacter::SwitchWeapon);
 	PlayerInputComponent->BindAction(TEXT("SwitchAmmo"), IE_Pressed, this, &AMyCharacter::SwitchAmmo);
+	PlayerInputComponent->BindAction(TEXT("SwitchInventory"), IE_Pressed, this, &AMyCharacter::SwitchInventory);
+}
+
+void AMyCharacter::ShowControlInfo() {
+	GEngine->AddOnScreenDebugMessage(-1, 8, FColor::Green, "                                                              Move: WASD");
+	GEngine->AddOnScreenDebugMessage(-1, 8, FColor::Green, "                                                              Show Inventory: I");
+	GEngine->AddOnScreenDebugMessage(-1, 8, FColor::Green, "                                                              Fire: LMB");
+	GEngine->AddOnScreenDebugMessage(-1, 8, FColor::Green, "                                                              Switch ammo: RMB");
 }
 
 void AMyCharacter::MoveForward(float AxisValue) {
@@ -182,5 +191,18 @@ m1:
 	idx = (idx + 1) % BulletsInventory.Num();
 	CurAmmo = BulletsInventory[idx];
 	if (CurAmmo == TBulletTypes::EBulletNone) goto m1;
+	auto CurGameMode = Cast<AUE4_HomeTask6_UMG_GameModeBase>(GetWorld()->GetAuthGameMode());
+	if (CurGameMode) {
+		CurGameMode->EvtSwitchAmmo.Broadcast(CurAmmo);
+	}
 	return; 
+}
+
+void AMyCharacter::SwitchInventory()
+{
+	auto CurGameMode = Cast<AUE4_HomeTask6_UMG_GameModeBase>(GetWorld()->GetAuthGameMode());
+	if (CurGameMode) {
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, "SwitchInventory");
+		CurGameMode->SwitchInventory();
+	}
 }

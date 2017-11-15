@@ -11,29 +11,34 @@ enum class TBulletTypes {
 };
 
 USTRUCT()
-struct FNameToBulletType {
+struct FBullet {
 	GENERATED_USTRUCT_BODY()
 
-	/*static TBulletTypes ToBulletType(FName bulletTypeName) {
-		if (bulletTypeName == "EBulletLight") return EBulletLight;
-		if (bulletTypeName == "EBulletStandard") return EBulletStandard;
-		if (bulletTypeName == "EBulletHard") return EBulletHard;
-		return EBulletNone;
-	}
-	static FName ToBulletTypeName(TBulletTypes bulletType) {
-		if (bulletType == EBulletLight) return "EBulletLight";
-		if (bulletType == EBulletStandard) return "EBulletStandard";
-		if (bulletType == EBulletHard) return "EBulletHard";
-		return "EBulletNone";
-	}*/
-};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TBulletTypes Type;
+	// While not using
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float Weight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString Description;
 
-/**
- * 
- */
-//class UE4_HOMETASK5TRY2_API GameStructs
-//{
-//public:
-//	GameStructs();
-//	~GameStructs();
-//};
+	void SetWeight(TBulletTypes& Type, float& Weight) {
+		switch (Type) {
+		case TBulletTypes::EBulletLight: 
+			Weight = 100; Description = "Light"; break;
+		case TBulletTypes::EBulletStandard:
+			Weight = 300; Description = "Standard";  break;
+		case TBulletTypes::EBulletHard:
+			Weight = 1000; Description = "Hard";  break;
+		case TBulletTypes::EBulletNone:
+			Weight = 0; Description = "None";  break;
+		}
+	}
+	FBullet() {
+		ChangeBullet(TBulletTypes::EBulletLight);
+	}
+	void ChangeBullet(TBulletTypes BulletType) {
+		Type = BulletType;
+		SetWeight(Type, Weight);
+	}
+};
